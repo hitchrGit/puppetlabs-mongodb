@@ -37,10 +37,22 @@ class Puppet::Provider::Mongodb < Puppet::Provider
     # config files.
     config = YAML.load_file(file)
     if config.kind_of?(Hash) # Using a valid YAML file for mongo 2.6
-      bindip = config['net.bindIp']
-      port = config['net.port']
-      shardsvr = config['sharding.clusterRole']
-      confsvr = config['sharding.clusterRole']
+      net = config['net']
+      if net.kind_of?(Hash)
+        bindip = net['bindIp']
+        port = config['port']
+      else
+        bindip = config['net.bindIp']
+        port = config['net.port']
+      end
+      sharding = config['sharding']
+      if sharding.kind_of?(Hash)
+        shardsvr = sharding['clusterRole']
+        confsvr = sharding['clusterRole']
+      else
+        shardsvr = config['sharding.clusterRole']
+        confsvr = config['sharding.clusterRole']
+      end
     else # It has to be a key-value config file
       config = {}
       File.readlines(file).collect do |line|
@@ -98,7 +110,12 @@ class Puppet::Provider::Mongodb < Puppet::Provider
     file = get_mongod_conf_file
     config = YAML.load_file(file)
     if config.kind_of?(Hash)
-      auth_enabled = config['security.authorization']
+      security = config['security']
+      if security.kind_of?(Hash)
+        auth_enabled = security['authorization']
+      else
+        auth_enabled = config['security.authorization']
+      end
     else # It has to be a key-value store
       config = {}
       File.readlines(file).collect do |line|
