@@ -3,10 +3,16 @@ class mongodb::repo (
   $ensure         = $mongodb::params::ensure,
   $version        = $mongodb::params::version,
   $repo_location  = undef,
+  $repo_release   = undef,
+  $repo_repos     = undef,
+  $repo_key       = undef,
   $proxy          = undef,
   $proxy_username = undef,
   $proxy_password = undef,
 ) inherits mongodb::params {
+  $release = $repo_release
+  $repos = $repo_repos
+  $key = $repo_key
   case $::osfamily {
     'RedHat', 'Linux': {
       if ($repo_location != undef){

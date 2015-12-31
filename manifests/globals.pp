@@ -32,6 +32,9 @@ class mongodb::globals (
   $proxy_password        = undef,
 
   $repo_location         = undef,
+  $repo_release          = undef,
+  $repo_repos            = undef,
+  $repo_key              = undef,
   $use_enterprise_repo   = undef,
 
   $pidfilepath           = undef,
@@ -42,6 +45,9 @@ class mongodb::globals (
     class { '::mongodb::repo':
       ensure        => present,
       repo_location => $repo_location,
+      repo_release  => $repo_release,
+      repo_repos    => $repo_repos,
+      repo_key      => $repo_key,
       proxy         => $repo_proxy,
     }
   }
